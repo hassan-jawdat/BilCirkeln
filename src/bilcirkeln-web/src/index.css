@@ -1,0 +1,505 @@
+:root {
+  --primary: #1f5eff;
+  --primary-dark: #1546c4;
+  --danger: #c62828;
+  --bg: #f4f6fa;
+  --card: #ffffff;
+  --text: #1c2333;
+  --muted: #667085;
+  --border: #dde2ea;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+a {
+  color: var(--primary);
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px 24px;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+
+.navbar nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.navbar a {
+  text-decoration: none;
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--text) !important;
+}
+
+.user-name {
+  color: var(--muted);
+}
+
+.container {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 520px;
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 500;
+  flex: 1;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+input,
+select,
+textarea {
+  font: inherit;
+  padding: 9px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.button,
+button.button {
+  display: inline-block;
+  font: inherit;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  background: var(--primary);
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: var(--primary-dark);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.button.secondary {
+  background: #e7ecf5;
+  color: var(--text);
+}
+
+.button.danger {
+  background: var(--danger);
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+
+.error {
+  color: var(--danger);
+  background: #fdecea;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.hero h1 {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+}
+
+.steps {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.steps li {
+  margin-bottom: 8px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.list-item:hover {
+  border-color: var(--primary);
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.details {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 18px;
+  margin: 0;
+}
+
+.details dt {
+  color: var(--muted);
+}
+
+.details dd {
+  margin: 0;
+}
+
+.description {
+  white-space: pre-wrap;
+  margin-bottom: 0;
+}
+
+.filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+/* --- Sell car page --- */
+.sell-title {
+  text-align: center;
+  font-weight: 400;
+  font-size: 1.9rem;
+  margin: 8px 0 28px;
+}
+
+.sell-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* Each step: the field in the middle, the gauge (or empty space) to the right.
+   The empty left column keeps the field centered. */
+.step-row {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 480px) 1fr;
+  gap: 24px;
+  align-items: end;
+  animation: step-in 0.3s ease;
+}
+
+.step-field {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.step-side {
+  grid-column: 3;
+}
+
+.step-label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.step-label input,
+.step-label select,
+.step-label textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 1.05rem;
+  font-weight: 400;
+}
+
+.step-label .row {
+  flex-wrap: nowrap;
+}
+
+/* Answer buttons (ChoiceButtons): 2 per row for Ja/Nej, otherwise 3 per row. */
+.choices {
+  display: grid;
+  gap: 10px;
+}
+
+.choices-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.choices-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 54px;
+  padding: 8px 10px;
+  font: inherit;
+  font-weight: 400;
+  color: var(--text);
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.choice:hover {
+  border-color: var(--primary);
+}
+
+.choice.selected {
+  border: 2px solid var(--primary);
+  background: #eef3ff;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.color-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid #c7ccd6;
+  flex-shrink: 0;
+}
+
+.submit-field {
+  align-items: center;
+}
+
+@keyframes step-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* License plate: blue EU band to the left, big black letters. */
+.plate {
+  display: flex;
+  height: 84px;
+  border: 2px solid var(--text);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.plate-eu {
+  width: 60px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0 6px;
+  background: #003399;
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.plate-stars {
+  color: #ffcc00;
+  font-size: 1.4rem;
+}
+
+.plate .plate-input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  border-radius: 0;
+  text-align: center;
+  font-size: 2.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.plate-input:focus {
+  outline: none;
+}
+
+.plate:focus-within {
+  box-shadow: 0 0 0 3px #c9d8ff;
+}
+
+.plate-input::placeholder {
+  color: #c7ccd6;
+}
+
+/* Input with a unit ("mil") inside to the right. */
+.input-suffix {
+  position: relative;
+}
+
+.input-suffix input {
+  width: 100%;
+  padding: 12px 48px 12px 12px;
+  font-size: 1.05rem;
+}
+
+.input-suffix span {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: 400;
+}
+
+.big-button {
+  align-self: center;
+  min-width: 260px;
+  padding: 13px 18px;
+  font-weight: 700;
+}
+
+/* Progress gauge */
+.gauge {
+  position: relative;
+  width: 110px;
+  text-align: center;
+}
+
+.gauge path {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+
+.gauge-track {
+  stroke: #e3e6ec;
+}
+
+.gauge-fill {
+  stroke: #3aa856;
+  transition: stroke-dasharray 0.3s ease;
+}
+
+.gauge-text {
+  margin-top: -30px;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.gauge-text strong {
+  font-size: 1.1rem;
+  color: var(--text);
+}
+
+/* On small screens: one column, the gauge goes under the latest step. */
+@media (max-width: 700px) {
+  .step-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .step-field,
+  .step-side {
+    grid-column: 1;
+  }
+
+  .step-side {
+    display: flex;
+    justify-content: center;
+  }
+
+  .step-side:empty {
+    display: none;
+  }
+
+  .plate .plate-input {
+    font-size: 2rem;
+  }
+
+  .choices-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  background: #e7ecf5;
+}
+
+.badge-Pending { background: #fff4d6; color: #7a5600; }
+.badge-OfferMade { background: #dde8ff; color: #1546c4; }
+.badge-Accepted { background: #dcf5e3; color: #1b6b35; }
+.badge-Declined { background: #f1f1f1; color: #555; }
+.badge-Rejected { background: #fdecea; color: var(--danger); }
