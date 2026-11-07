@@ -80,7 +80,21 @@ gantt
     Förbered redovisning             :t3, after t2, 1d
 ```
 
-> Uppdatera datumen och markeringen `done` efter hur arbetet faktiskt går. Skriv ner förändringar i [beslutsloggen](beslutslogg.md).
+### Plan jämfört med verkligt utfall
+Diagrammet ovan är den ursprungliga planen. I praktiken gick backend och frontend mycket snabbare med hjälp av AI, och redovisningen låg tidigare än planen räknade med (6/11). Den tid som blev över användes till att förbättra säljformuläret och till att förstå koden.
+
+| Del | Planerat | Verkligt | Kommentar |
+|---|---|---|---|
+| Planering, struktur, datamodell | 26/10–30/10 | 29/10 | Klart på en dag |
+| Backend: Identity, JWT, services, tester | 2/11–6/11 | 29/10 | Byggdes tillsammans med AI |
+| Frontend: kund- och personalsidor | 9/11–13/11 | 29/10 | Byggdes tillsammans med AI |
+| Ny design av säljformuläret + 10 nya frågor | Fanns inte i planen | 30/10 | Tillagt efter test i webbläsaren (beslut 14–19) |
+| Förstå koden, förbereda redovisning | 20/11 | 3/11–5/11 | Tog mer tid än planerat |
+| GitHub-inlämning | Dagen före redovisningen kl. 12 | 5/11 kväll | **Försenad.** Lärdom: pusha tidigt |
+| Muntlig redovisning | – | 6/11 | Genomförd |
+| Rapport klar | 16/11–19/11 | 7/11 | Skickad till läraren via mail |
+
+Förändringar och beslut under arbetet finns i [beslutsloggen](beslutslogg.md).
 
 ## Risker
 | Risk | Konsekvens | Åtgärd |
