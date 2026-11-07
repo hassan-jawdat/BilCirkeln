@@ -2,7 +2,7 @@
 
 *Examensprojekt, fullstack .NET, 4 veckor, individuellt.*
 
-> **Utkast.** Avsnitten markerade med ✏️ ska du skriva om med egna ord, särskilt reflektionen. Läraren vill höra din röst.
+**Källkod:** https://github.com/hassan-jawdat/BilCirkeln
 
 ## 1. Bakgrund och problemformulering
 Att sälja bil privat tar tid. Säljaren måste fotografera bilen, skriva en annons, svara på frågor och boka provkörningar, och ofta prutar köparen i sista stund.
@@ -30,7 +30,7 @@ En webbapplikation med en React-frontend som pratar med ett ASP.NET Core Web API
 
 **Datamodell**
 - `ApplicationUser` (Identity-användare + `FullName`)
-- `CarSubmission`: bilen som kunden vill sälja (regnr, märke, modell, år, miltal, drivmedel, växellåda, önskat pris, status)
+- `CarSubmission`: bilen som kunden vill sälja (regnr, märke, modell, år, miltal, drivmedel, växellåda, önskat pris, status) och 10 extra uppgifter om bilen: antal nycklar, extra däck, servicebok, servicehistorik, besiktning, säljartyp, import, finansiering och klädselns färg och material
 - `Offer`: ett bud från personalen (belopp, meddelande, status). En `CarSubmission` kan ha **flera** `Offer`.
 
 **Statusflöde**
@@ -41,6 +41,8 @@ Pending ──(personal lämnar bud)──► OfferMade ──(kund accepterar)�
    └──(personal avböjer)──► Rejected ◄──(personal avböjer)── Declined
 ```
 
+**Säljformuläret** visas **ett steg i taget**, 16 steg totalt. Det börjar med ett fält som ser ut som en svensk registreringsskylt. Nästa fråga visas först när den förra är besvarad, och en mätare bredvid visar hur många procent som är ifyllt. Frågor med fasta svar besvaras med knappar (Ja/Nej, färger osv.). Kunden anger miltalet i mil, som räknas om till km innan det sparas.
+
 ## 4. Genomförande
 Arbetet följde [projektplanen](projektplan.md) med prioriteringen måste/bör/kan:
 1. Struktur: solution, API-projekt, testprojekt, React-app, git
@@ -50,6 +52,9 @@ Arbetet följde [projektplanen](projektplan.md) med prioriteringen måste/bör/k
 5. xUnit-tester
 6. Frontend: auth-context, routing, kund- och personalsidor
 7. Manuell test av hela flödet, sedan dokumentation
+8. Efter test i webbläsaren gjorde jag om säljformuläret. Jag inspirerades av riktiga inköpstjänster och la till skylten, steg-för-steg-visningen och procentmätaren
+9. 10 extra frågor om bilen, så att personalen kan lämna ett mer korrekt bud. Det krävde en ny migration (`AddCarDetails`)
+10. Koden publicerades på GitHub och projektet redovisades muntligt
 
 Detaljer finns i [projektdagboken](projektdagbok.md) och [beslutsloggen](beslutslogg.md).
 
@@ -65,6 +70,8 @@ Detaljer finns i [projektdagboken](projektdagbok.md) och [beslutsloggen](besluts
 | `ServiceResult<T>` | Förväntade fel (hittas inte, ingen behörighet, ogiltig status) hanteras utan exceptions |
 | React + Vite + React Router + Axios | Snabb utvecklingsmiljö, sidnavigering och enkel HTTP med interceptors |
 | xUnit + InMemory-databas | Snabba tester av affärsreglerna utan SQL Server |
+| Nya kolumner nullable i databasen, men `[Required]` i DTO:n | Äldre förfrågningar saknar svaren och ska ändå fungera. Nya förfrågningar måste ha svar |
+| REST API med JSON över HTTP | Standardsättet för en React-frontend att prata med en backend |
 
 ## 6. Säkerhetsaspekter
 - **Lösenord** hashas av Identity (PBKDF2) och sparas aldrig i klartext. Regel: minst 8 tecken, stor och liten bokstav och siffra.
@@ -78,7 +85,7 @@ Detaljer finns i [projektdagboken](projektdagbok.md) och [beslutsloggen](besluts
 - **CORS** tillåter bara frontendens adress.
 - **SQL-injektion** förhindras eftersom EF Core använder parametriserade frågor.
 - **XSS:** React escapar all text automatiskt.
-- *Kända svagheter:* token i `localStorage` kan stjälas vid en XSS-attack. Det finns ingen rate limiting på inloggningen och ingen utloggning på servern (token gäller tills den går ut).
+- *Kända svagheter:* appen körs lokalt över **HTTP, inte HTTPS/TLS**. Det är okej på `localhost`, eftersom trafiken aldrig lämnar datorn. I en riktig miljö skulle lösenord och JWT-token annars skickas i klartext, så där måste allt gå över HTTPS (`UseHttpsRedirection` + HSTS). Token i `localStorage` kan stjälas vid en XSS-attack. Det finns ingen rate limiting på inloggningen och ingen utloggning på servern (token gäller tills den går ut).
 
 ## 7. Testning och resultat
 **Automatiska tester (xUnit)**: 18 tester, alla godkända (`dotnet test`).
@@ -113,23 +120,43 @@ AI-verktyget **Claude Code** har använts för att:
 **Hur jag kontrollerade AI:ns arbete:**
 - byggde projektet och körde alla tester (18/18)
 - testade alla endpoints, både rätt och fel fall, och kontrollerade statuskoder
-- gick igenom koden fil för fil och svarade på kontrollfrågor
-- ✏️ *Skriv här vad du själv ändrade, ifrågasatte eller lärde dig.*
+- testade appen själv i webbläsaren som både kund och personal, och hela flödet från inskickad bil till accepterat bud
+- gick igenom koden och lät AI:n förklara begrepp som jag inte förstod (JWT, REST, HTTP/TLS, dependency injection, databasens relationer) tills jag kunde förklara dem själv
+
+**Vad jag själv bestämde:**
+- Hur säljformuläret skulle se ut. Jag tog inspiration från en riktig inköpstjänst och ville ha ett fält som ser ut som en registreringsskylt, frågor som visas en i taget och en mätare som visar hur långt man har kommit.
+- Att formuläret skulle ha fler frågor om bilen (nycklar, däck, service, besiktning, klädsel med mera), så att personalen kan ge ett bättre bud.
+
+**Vad jag lärde mig:** hur frontend och backend pratar med varandra via HTTP och JSON, hur inloggning med JWT och roller fungerar, och hur databasen byggs från C#-klasser med Entity Framework och migrations.
+
+**Reflektion om AI:** AI gjorde att jag kunde bygga mer än jag hade hunnit själv. Nackdelen är att det går fort, och då är det lätt att ha kod som man inte förstår. Jag fick lägga mycket tid på att gå igenom och förstå koden i efterhand.
 
 ## 9. Problem och utmaningar
 - `AddIdentity` slår på cookie-inloggning som standard och krockar med JWT. Lösningen blev `AddIdentityCore` + `AddRoles`.
 - SQL Server tillåter inte två cascade-delete-vägar till samma tabell (`Offer → User` både via bilen och via personalen). Lösningen blev `DeleteBehavior.Restrict` på personalrelationen.
 - Teckenkodning vid manuella test i terminalen ("ä" skickades fel). Problemet låg i verktyget, inte i appen.
-- ✏️ *Lägg till egna utmaningar.*
+- När de 10 nya frågorna lades till fanns redan bilar i databasen som saknade svaren. Om kolumnerna hade krävt ett värde skulle databasen ha fått hitta på svar åt dem. Lösningen blev nullable kolumner, och gamla bilar visar "–".
+- Med drivmedel och växellåda förvalda räknades steget som klart direkt och hoppades över. Lösningen blev att de börjar tomma ("Välj...").
+- **Att förstå all kod.** Det svåraste för mig var att kunna förklara allt som byggdes, till exempel JWT, skillnaden mellan HTTP och HTTPS och hur lagren i backend hänger ihop. Jag löste det genom att be om förklaringar och kontrollfrågor tills jag kunde svara med egna ord.
+- **Tidsplanen.** Jag la mer tid på att bygga och förbättra appen än på dokumentationen. Därför blev GitHub-inlämningen sen, och projektdagboken skrevs inte efter varje arbetspass.
 
 ## 10. Reflektion och vidareutveckling
-✏️ *Skriv med egna ord: vad gick bra, vad var svårt, vad skulle du göra annorlunda?*
+**Vad gick bra:** Appen fungerar som det var tänkt. En kund kan sälja sin bil, personalen kan lämna bud och kunden kan svara. Jag är särskilt nöjd med säljformuläret, som blev tydligt och enkelt att använda. Alla 18 tester går igenom, och demon fungerade vid redovisningen.
+
+**Vad var svårt:** Att förstå säkerhetsdelarna, som JWT, hashning av lösenord och TLS, och att hålla dokumentationen uppdaterad samtidigt som jag byggde.
+
+**Vad jag skulle göra annorlunda:**
+- Skriva i projektdagboken efter varje arbetspass i stället för i efterhand.
+- Pusha till GitHub tidigt och ofta, så att inlämningen aldrig blir sen.
+- Bygga i mindre steg och förstå varje del innan jag går vidare till nästa.
+- Använda HTTPS från början, även lokalt.
 
 **Begränsningar**
 - Inga bilder av bilen
 - Personalen kan inte se statistik
 - Token kan inte återkallas före utgångstiden
-- Körs bara lokalt
+- Körs bara lokalt och utan HTTPS
+- Om två i personalen lämnar bud exakt samtidigt kan båda sparas (race condition)
 
 **Möjlig vidareutveckling**
 - Bilduppladdning (t.ex. Azure Blob Storage)
@@ -137,4 +164,4 @@ AI-verktyget **Claude Code** har använts för att:
 - E-postavisering när ett bud lämnas eller besvaras
 - Integrationstester med `WebApplicationFactory`
 - Refresh tokens och token i HttpOnly-cookie
-- Driftsättning i Azure
+- Driftsättning i Azure med HTTPS
